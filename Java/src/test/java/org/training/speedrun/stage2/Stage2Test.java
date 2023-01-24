@@ -1,45 +1,38 @@
 package org.training.speedrun.stage2;
 
-import org.junit.jupiter.api.Test;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.training.speedrun.stage2.Stage2;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import java.util.stream.Stream;
 
 class Stage2Test {
 
-    private Stage2 stage2 = new Stage2();
+    private final Stage2 stage2 = new Stage2();
 
-    @Test
-    void score_is_zero_if_all_the_dice_have_the_same_value() {
-        assertThat(stage2.computeScore(1, 1, 1)).isEqualTo(0);
-        assertThat(stage2.computeScore(2, 2, 2)).isEqualTo(0);
-        assertThat(stage2.computeScore(3, 3, 3)).isEqualTo(0);
-        assertThat(stage2.computeScore(4, 4, 4)).isEqualTo(0);
-        assertThat(stage2.computeScore(5, 5, 5)).isEqualTo(0);
-        assertThat(stage2.computeScore(6, 6, 6)).isEqualTo(0);
+    private static Stream<Arguments> generateCart() {
+        return Stream.of(
+                Arguments.of(new double[]{}, false, false, 0),
+                Arguments.of(new double[]{2, 3}, false, false, 5),
+                Arguments.of(new double[]{10, 10}, true, true, 15),
+                Arguments.of(new double[]{10, 10}, true, false, 19),
+                Arguments.of(new double[]{10, 10}, false, true, 16),
+                Arguments.of(new double[]{1, 1, 1, 1, 1}, false, false, 4.8),
+                Arguments.of(new double[]{1, 1, 1, 1, 1}, true, false, 4.55),
+                Arguments.of(new double[]{1, 1, 1, 1, 1}, false, true, 3.8),
+                Arguments.of(new double[]{1, 1, 1, 1, 1}, true, true, 3.55),
+                Arguments.of(new double[]{2, 2, 2, 2, 2, 2, 2, 2, 2, 2}, false, false, 18),
+                Arguments.of(new double[]{2, 2, 2, 2, 2, 2, 2, 2, 2, 2}, true, false, 17),
+                Arguments.of(new double[]{2, 2, 2, 2, 2, 2, 2, 2, 2, 2}, false, true, 14),
+                Arguments.of(new double[]{2, 2, 2, 2, 2, 2, 2, 2, 2, 2}, true, true, 13)
+        );
     }
 
-    @Test
-    void score_is_the_sum_of_dice_multiplied_by_2_if_2_dices_have_the_same_value() {
-        assertThat(stage2.computeScore(1, 1, 3)).isEqualTo(10);
-        assertThat(stage2.computeScore(4, 3, 3)).isEqualTo(20);
-        assertThat(stage2.computeScore(2, 5, 5)).isEqualTo(24);
-        assertThat(stage2.computeScore(1, 4, 1)).isEqualTo(12);
-    }
-
-    @Test
-    void score_is_100_if_dice_are_1_2_3() {
-        assertThat(stage2.computeScore(1, 2, 3)).isEqualTo(100);
-        assertThat(stage2.computeScore(1, 3, 2)).isEqualTo(100);
-        assertThat(stage2.computeScore(2, 1, 3)).isEqualTo(100);
-        assertThat(stage2.computeScore(2, 3, 1)).isEqualTo(100);
-        assertThat(stage2.computeScore(3, 1, 2)).isEqualTo(100);
-        assertThat(stage2.computeScore(3, 2, 1)).isEqualTo(100);
-    }
-
-    @Test
-    void score_is_the_sum_of_dice_if_no_specific_rules_apply() {
-        assertThat(stage2.computeScore(1, 3, 4)).isEqualTo(8);
-        assertThat(stage2.computeScore(2, 5, 3)).isEqualTo(10);
-        assertThat(stage2.computeScore(4, 6, 2)).isEqualTo(12);
+    @ParameterizedTest
+    @MethodSource("generateCart")
+    void compute_cart_price(double[] c, boolean v, boolean b, double expectedPrice) {
+        Assertions.assertThat(stage2.compute(c, v, b)).isEqualTo(expectedPrice);
     }
 }
