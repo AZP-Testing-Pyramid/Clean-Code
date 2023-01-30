@@ -1,6 +1,8 @@
 package org.training.speedrun.stage1;
 
+import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
 
@@ -10,14 +12,16 @@ class Stage1Test {
 
     private Stage1 stage1 = new Stage1();
 
-//    @ParameterizedTest
-//    @MethodSource("provideCarts")
-//    void compute_price(Stage1.Items[] cart, int expectedPrice) {
-//        // When
-//        int price = stage1.computePrice(cart);
-//        // Then
-//        assertThat(price).isEqualTo(expectedPrice);
-//    }
+    @ParameterizedTest
+    @MethodSource("provideCarts")
+    void compute_price(Stage1.Items[] cart, int expectedPrice) {
+        // When
+        int price = stage1.computePrice(cart);
+        // Then
+        assertThat(price).isEqualTo(expectedPrice);
+    }
+
+
 
     private static Stream<Arguments> provideCarts() {
         return Stream.of(

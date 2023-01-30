@@ -5,6 +5,15 @@ package org.training.speedrun.stage1;
  */
 public class Stage1 {
 
+    public int computePrice(Items[] cart) {
+        int res = 0;
+        for (Stage1.Items item : cart) {
+            res += item.getPrice();
+        }
+
+        return res;
+    }
+
     enum Items {
         POTATO(1),
         TOMATO(2),
